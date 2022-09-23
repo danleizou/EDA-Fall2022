@@ -60,21 +60,39 @@ print(result.median)
 8.  Label the columns of your data frame with informative titles.
 
 ```{r}
+#5 and #6.
+
+vector1 <- c('Marianne', 'Felix', 'Ingrid', 'Claude') #character vector
+vector1
+vector2 <- c(90, 60, 45, 70) #numeric vector
+vector2
+vector3 <- c(TRUE, TRUE, FALSE, TRUE) #logical vector
+vector3
+
+#7. Combining vectors into data frame
+
+dataframe1 <- data.frame(vector1,vector2,vector3)
+names(dataframe1) <- c("Name", "Score", "Passed"); View(dataframe1)
 
 ```
 
 9.  QUESTION: How is this data frame different from a matrix?
 
-> Answer:
+> Answer: In a matrix, all of the elements have to be the same type of data but in a data frame the columns can have different types of data.
 
 10. Create a function with an if/else statement. Your function should take a **vector** of test scores and print (not return) whether a given test score is a passing grade of 50 or above (TRUE or FALSE). You will need to choose either the `if` and `else` statements or the `ifelse` statement. 
 
 11. Apply your function to the vector with test scores that you created in number 5.
 
 ```{r}
+#vector of test scores
+vector1 <- c(33, 40, 80, 73)
+
+#ifelse function to determine passing
+ifelse(vector1 < 50, "FAIL", "PASS")
 
 ```
 
 12. QUESTION: Which option of `if` and `else` vs. `ifelse` worked? Why?
 
-> Answer:
+> Answer: 'if' and 'else' didn't work because if the test expression failed, then nothing would get executed. 'ifelse' worked because it presented parameters of what would pass, but also what should be returned in case of a fail.
