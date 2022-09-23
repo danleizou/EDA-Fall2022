@@ -72,8 +72,12 @@ passed
 #7 combining each vectors into a data frame, assigning data frame informative name
 #8 labelling columns of data frame with informative titles, shown below
 
-testScoresResults <- data.frame(names,scores,passed)
-names(testScoresResults) <- c("Name", "Score", "Passed?"); View(testScoreResults)
+#creating the dataframe
+testScoreResults <- data.frame(names,scores,passed)
+names(testScoreResults) <- c("Name", "Score", "Passed?"); View(testScoreResults)
+
+#printing the dataframe
+testScoreResults
 
 ```
 
