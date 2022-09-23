@@ -60,7 +60,7 @@ print(result.median)
 8.  Label the columns of your data frame with informative titles.
 
 ```{r}
-#5 and #6.
+#5 and 6.
 
 vector1 <- c('Marianne', 'Felix', 'Ingrid', 'Claude') #character vector
 vector1
