@@ -1,6 +1,6 @@
 ---
 title: "Assignment 2: Coding Basics"
-author: "Student Name"
+author: "Danlei Zou"
 output: pdf_document
 geometry: margin=2.54cm
 editor_options: 
@@ -72,7 +72,8 @@ vector3
 #7. Combining vectors into data frame
 
 dataframe1 <- data.frame(vector1,vector2,vector3)
-names(dataframe1) <- c("Name", "Score", "Passed"); View(dataframe1)
+TestScores <- dataframe1
+names(TestScores) <- c("Name", "Score", "Passed?"); View(TestScores)
 
 ```
 
@@ -85,14 +86,15 @@ names(dataframe1) <- c("Name", "Score", "Passed"); View(dataframe1)
 11. Apply your function to the vector with test scores that you created in number 5.
 
 ```{r}
-#vector of test scores
-vector1 <- c(33, 40, 80, 73)
 
 #ifelse function to determine passing
-ifelse(vector1 < 50, "FAIL", "PASS")
+#ifelse(vector, "FAIL", "PASS")
+
+#applying to test score vector from number 5
+ifelse(vector2 < 50, "FAIL", "PASS")
 
 ```
 
 12. QUESTION: Which option of `if` and `else` vs. `ifelse` worked? Why?
 
-> Answer: 'if' and 'else' didn't work because if the test expression failed, then nothing would get executed. 'ifelse' worked because it presented parameters of what would pass, but also what should be returned in case of a fail.
+> Answer: 'ifelse' worked because it checked each element in the test score vector from number 5 to see if it was less than 50 and therefore print a FAIL. If it was not less than 50, then it would print the PASS. 
