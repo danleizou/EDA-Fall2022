@@ -94,6 +94,8 @@ class(Neonics$Conc.1..Author.)
 
 ```{r}
 #creating line plot by pub year
+library(ggplot2)
+
 ggplot(Neonics) + 
   geom_freqpoly(aes(x = Publication.Year), bins = 50)
 ```
