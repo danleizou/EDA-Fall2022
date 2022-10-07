@@ -33,8 +33,35 @@ The completed exercise is due on Friday, Oct7th @ 5:00pm.
 
 ```{r, message = FALSE}
 #1
+getwd()
+
+#loading the four EPA Air raw datasets with stringAsFactors
+O3NC2018 <- read.csv("./Data/Raw/EPAair_O3_NC2018_raw.csv", stringsAsFactors = TRUE)
+O3NC2019 <- read.csv("./Data/Raw/EPAair_O3_NC2019_raw.csv", stringsAsFactors = TRUE)
+PM25NC2018 <- read.csv("./Data/Raw/EPAair_PM25_NC2018_raw.csv", stringsAsFactors = TRUE)
+PM25NC2019 <- read.csv("./Data/Raw/EPAair_PM25_NC2019_raw.csv", stringsAsFactors = TRUE)
 
 #2
+
+#exploring dimensions of datasets
+dim(O3NC2018)
+dim(O3NC2019)
+dim(PM25NC2018)
+dim(PM25NC2019)
+
+#exploring column names of datasets
+colnames(O3NC2018)
+colnames(O3NC2019)
+colnames(PM25NC2018)
+colnames(PM25NC2019)
+
+#exploring structure of datasets
+str(O3NC2018)
+str(O3NC2019)
+str(PM25NC2018)
+str(PM25NC2019)
+
+
 ```
 
 ## Wrangle individual datasets to create processed files.
@@ -46,11 +73,56 @@ The completed exercise is due on Friday, Oct7th @ 5:00pm.
 ```{r}
 #3
 
+#changing date to date format in datasets
+
+O3NC2018$Date <- mdy(O3NC2018$Date)
+O3NC2019$Date <- mdy(O3NC2019$Date)
+PM25NC2018$Date <- mdy(PM25NC2018$Date)
+PM25NC2019$Date <- mdy(PM25NC2019$Date)
+
+#checking to make sure date is now in date format
+class(O3NC2018$Date)
+
 #4
+
+#selecting columns
+
+O3NC2018.subset <- select(O3NC2018, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+
+O3NC2019.subset <- select(O3NC2019, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+
+PM25NC2018.subset <- select(PM25NC2018, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+
+PM25NC2019.subset <- select(PM25NC2019, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+
+#checking dimensions of new subsets to make sure there are 7 columns in each
+dim(O3NC2018.subset)
+dim(O3NC2019.subset)
+dim(PM25NC2018.subset)
+dim(PM25NC2019.subset)
 
 #5
 
+#checking length of columns in PM2.5 datasets
+view(PM25NC2018.subset$AQS_PARAMETER_DESC)
+length(PM25NC2018.subset$AQS_PARAMETER_DESC)
+
+view(PM25NC2019.subset$AQS_PARAMETER_DESC)
+length((PM25NC2019.subset$AQS_PARAMETER_DESC))
+
+#filling cells in AQS_PARAMETER_DESC to "PM2.5"
+PM25NC2018.subset$AQS_PARAMETER_DESC = "PM2.5"
+
+PM25NC2019.subset$AQS_PARAMETER_DESC = "PM2.5"
+
+
 #6
+
+#saving processed datasets to Data/Processed folder
+write.csv(O3NC2018.subset, row.names = FALSE, file = "./Data/Processed/EPAair_O3_NC2018_processed.csv")
+write.csv(O3NC2019.subset, row.names = FALSE, file = "./Data/Processed/EPAair_O3_NC2019_processed.csv")
+write.csv(PM25NC2018.subset, row.names = FALSE, file = "./Data/Processed/EPAair_PM25_NC2018_processed.csv")
+write.csv(PM25NC2019.subset, row.names = FALSE, file = "./Data/Processed/EPAair_PM25_NC2019_processed.csv")
 
 ```
 
@@ -71,13 +143,39 @@ The completed exercise is due on Friday, Oct7th @ 5:00pm.
 ```{r}
 #7
 
+#combining processed EPA air datasets
+EPAairCombined <- rbind(O3NC2018.subset, O3NC2019.subset, PM25NC2018.subset, PM25NC2019.subset)
+dim(EPAairCombined)
+
 #8
+
+#wrangling dataset with pipe function to satisfy the conditions given
+EPAairCombined2 <-
+  EPAairCombined %>%
+  filter(Site.Name %in% c("Linville Falls", "Durham Armory", "Leggett", "Hattie Avenue", "Clemmons Middle", "Mendenhall School", "Frying Pan Mountain", "West Johnston Co.", "Garinger High School", "Castle Hayne", "Pitt Agri. Center", "Bryson City", "Millbrook School")) %>%
+  group_by(Date, Site.Name, AQS_PARAMETER_DESC, COUNTY) %>%
+  summarise(meanAQIValue = mean(DAILY_AQI_VALUE),
+            meanLatitude = mean(SITE_LATITUDE),
+            meanLongitude = mean(SITE_LONGITUDE)) %>%
+  mutate(month = month(Date), year = year(Date))
+
+#checking summary of new dataset after pipe function
+summary(EPAairCombined2)
+
+dim(EPAairCombined2)
 
 #9
 
+EPAairCombined.spread <- pivot_wider(EPAairCombined2, names_from = AQS_PARAMETER_DESC, values_from = meanAQIValue)
+
 #10
 
+#calling up dimensions of spread dataset
+dim(EPAairCombined.spread)
+
 #11
+
+write.csv(EPAairCombined.spread, row.names = FALSE, file = "./Data/Processed/EPAair_O3_PM25_NC1718_Processed.csv")
 
 ```
 
@@ -88,14 +186,20 @@ The completed exercise is due on Friday, Oct7th @ 5:00pm.
 13. Call up the dimensions of the summary dataset.
 
 ```{r}
-#12a
+#12a and 12b
 
-#12b
+EPAairCombined.spread.summary <-
+  EPAairCombined.spread %>%
+  group_by(Site.Name, month, year) %>%
+  summarise(meanAQIozone = mean(Ozone),
+            meanAQIPM25 = mean(PM2.5)) %>%
+  drop_na(meanAQIozone, meanAQIPM25)
 
 #13
 
+dim(EPAairCombined.spread.summary)
 ```
 
 14. Why did we use the function `drop_na` rather than `na.omit`?
 
-> Answer: 
+> Answer: The drop_na function will get rid of the rows with NAs, whereas the na.omit function will delete NAs from the dataframe.
