@@ -33,7 +33,11 @@ The completed exercise is due on Friday, Oct7th @ 5:00pm.
 
 ```{r, message = FALSE}
 #1
+
+#checking working directory and loading lubridate and tidyverse
 getwd()
+library(lubridate)
+library(tidyverse)
 
 #loading the four EPA Air raw datasets with stringAsFactors
 O3NC2018 <- read.csv("./Data/Raw/EPAair_O3_NC2018_raw.csv", stringsAsFactors = TRUE)
@@ -85,7 +89,7 @@ class(O3NC2018$Date)
 
 #4
 
-#selecting columns
+#selecting columns for each dataset
 
 O3NC2018.subset <- select(O3NC2018, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
 
@@ -103,17 +107,17 @@ dim(PM25NC2019.subset)
 
 #5
 
-#checking length of columns in PM2.5 datasets
+#filling cells in AQS_PARAMETER_DESC to "PM2.5"
+PM25NC2018.subset$AQS_PARAMETER_DESC = "PM2.5"
+
+PM25NC2019.subset$AQS_PARAMETER_DESC = "PM2.5"
+
+#checking length of columns in PM2.5 datasets after filling 
 view(PM25NC2018.subset$AQS_PARAMETER_DESC)
 length(PM25NC2018.subset$AQS_PARAMETER_DESC)
 
 view(PM25NC2019.subset$AQS_PARAMETER_DESC)
 length((PM25NC2019.subset$AQS_PARAMETER_DESC))
-
-#filling cells in AQS_PARAMETER_DESC to "PM2.5"
-PM25NC2018.subset$AQS_PARAMETER_DESC = "PM2.5"
-
-PM25NC2019.subset$AQS_PARAMETER_DESC = "PM2.5"
 
 
 #6
@@ -145,6 +149,8 @@ write.csv(PM25NC2019.subset, row.names = FALSE, file = "./Data/Processed/EPAair_
 
 #combining processed EPA air datasets
 EPAairCombined <- rbind(O3NC2018.subset, O3NC2019.subset, PM25NC2018.subset, PM25NC2019.subset)
+
+#checking dimensions of combined dataset
 dim(EPAairCombined)
 
 #8
@@ -159,13 +165,14 @@ EPAairCombined2 <-
             meanLongitude = mean(SITE_LONGITUDE)) %>%
   mutate(month = month(Date), year = year(Date))
 
-#checking summary of new dataset after pipe function
+#checking summary and dimensions of new dataset after pipe function
 summary(EPAairCombined2)
 
 dim(EPAairCombined2)
 
 #9
 
+#spreading ozone and PM2.5 AQI values into separate columns
 EPAairCombined.spread <- pivot_wider(EPAairCombined2, names_from = AQS_PARAMETER_DESC, values_from = meanAQIValue)
 
 #10
@@ -175,6 +182,7 @@ dim(EPAairCombined.spread)
 
 #11
 
+#saving processed dataset to Data/Processed folder
 write.csv(EPAairCombined.spread, row.names = FALSE, file = "./Data/Processed/EPAair_O3_PM25_NC1718_Processed.csv")
 
 ```
@@ -188,18 +196,21 @@ write.csv(EPAairCombined.spread, row.names = FALSE, file = "./Data/Processed/EPA
 ```{r}
 #12a and 12b
 
+#using split-apply-combine to generate summary dataset with meanAQI values of ozone and PM25
 EPAairCombined.spread.summary <-
   EPAairCombined.spread %>%
   group_by(Site.Name, month, year) %>%
   summarise(meanAQIozone = mean(Ozone),
             meanAQIPM25 = mean(PM2.5)) %>%
+  #pipe function to remove instances without month and year
   drop_na(meanAQIozone, meanAQIPM25)
 
 #13
 
+#checking dimensions of summary dataset
 dim(EPAairCombined.spread.summary)
 ```
 
 14. Why did we use the function `drop_na` rather than `na.omit`?
 
-> Answer: The drop_na function will get rid of the rows with NAs, whereas the na.omit function will delete NAs from the dataframe.
+> Answer: The drop_na function will get rid of the rows with NAs, whereas the na.omit function will delete instances of NAs from the dataframe.
