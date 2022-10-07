@@ -34,6 +34,11 @@ The completed exercise is due on Friday, Oct7th @ 5:00pm.
 ```{r, message = FALSE}
 #1
 
+#install.packages('formatR')
+
+library(formatR)
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=80), tidy=TRUE)
+
 #checking working directory and loading lubridate and tidyverse
 getwd()
 library(lubridate)
