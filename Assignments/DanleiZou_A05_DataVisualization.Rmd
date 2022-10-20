@@ -3,6 +3,8 @@ title: "Assignment 5: Data Visualization"
 author: "Danlei Zou"
 output: pdf_document
 geometry: margin=2.54cm
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -41,7 +43,23 @@ the processed data file for the Niwot Ridge litter dataset (use the
 ```{r}
 #1 
 
+#loading packages
+library(tidyverse)
+library(lubridate)
+library(cowplot)
+
+#loading relevant datasets
+PeterPaul.Lake <- read.csv("./Data/Processed/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv", stringsAsFactors = TRUE)
+Litter <- read.csv("./Data/Processed/NEON_NIWO_Litter_mass_trap_Processed.csv", stringsAsFactors = TRUE)
+
 #2 
+
+# Set date to date format
+PeterPaul.Lake$sampledate <- as.Date(PeterPaul.Lake$sampledate , format = "%Y-%m-%d")
+Litter$collectDate <- as.Date(Litter$collectDate , format = "%Y-%m-%d")
+
+class(PeterPaul.Lake$sampledate)
+class(Litter$collectDate)
 
 ```
 ## Define your theme
@@ -49,6 +67,12 @@ the processed data file for the Niwot Ridge litter dataset (use the
 
 ```{r}
 #3
+
+# Set theme
+mytheme <- theme_classic(base_size = 14) +
+  theme(axis.text = element_text(color = "black"), 
+        legend.position = "top")
+theme_set(mytheme)
 
 ```
 
@@ -65,6 +89,15 @@ limits using `xlim()` and/or `ylim()`).
 ```{r}
 #4
 
+PeterPaul.plot <-
+  ggplot(PeterPaul.Lake, aes(x = tp_ug, y = po4, color = lakename)) +
+  geom_point() +
+  geom_smooth (method = lm, color = "black") +
+  xlab("Phosphate") +
+  ylab("Total Phosphorous") +
+  ylim(0,100) +
+  ggtitle("Total phosphorous by phosphate for Peter Lake and Paul Lake")
+print(PeterPaul.plot)
 ```
 
 
@@ -78,6 +111,35 @@ see <https://r-lang.com/month-abb-in-r-with-example>
 
 ```{r}
 #5
+
+#boxplot of temperature
+PeterPaul.temperature.boxplot <-
+  ggplot(PeterPaul.Lake, aes(x = factor(month, levels = c(1:12), labels = month.abb), y = temperature_C)) +
+  geom_boxplot(aes(color = lakename)) +
+  ggtitle("Boxplot of Temperatures in Peter and Paul Lakes") +
+  xlab ("Month") +
+  ylab ("Temperature in Celsius") +
+  scale_x_discrete(drop = FALSE)
+print(PeterPaul.temperature.boxplot)
+
+#boxplot of TP
+PeterPaul.TP.plot <-
+  ggplot(PeterPaul.Lake, aes(x = factor(month, levels = c(1:12), labels = month.abb), y = tp_ug)) +
+  geom_boxplot(aes(color = lakename)) +
+  ggtitle("Boxplot of TP in Peter and Paul Lakes") +
+  xlab ("Month") +
+  ylab ("Total Phosphorous") +
+  scale_x_discrete(drop = FALSE)
+print(PeterPaul.TP.plot)
+
+#boxplot of TN
+PeterPaul.TN.plot <-
+  ggplot(PeterPaul.Lake, aes(x = factor(month, levels = c(1:12), labels = month.abb), y = tn_ug)) +
+  geom_boxplot(aes(color = lakename)) +
+  ggtitle("Boxplot of TN in Peter and Paul Lakes") +
+  xlab ("Month") +
+  ylab ("Total Nitrogen")
+print(PeterPaul.TN.plot)
 
 ```
 
@@ -97,7 +159,27 @@ three facets rather than separated by color.
 ```{r}
 #6
 
+#creating Needles plot by nlcd color
+Litter.Needles.plot <-
+  ggplot(Litter, aes(x = collectDate, y = dryMass, color = nlcdClass)) +
+  geom_point() +
+  geom_smooth (method = lm, color = "black") +
+  ggtitle("Dry mass of needle litter by date") +
+  xlab ("Date") +
+  ylab ("Dry Mass")
+print(Litter.Needles.plot)
+
 #7
+
+#creating Needles plot by nlcd faceted
+Litter.Needles.facet.plot <-
+  ggplot(Litter, aes(x = collectDate, y = dryMass)) +
+  geom_point() +
+  facet_wrap(vars(nlcdClass), nrow = 3) +
+  ggtitle("Dry mass of needle litter by date [faceted]") +
+  xlab ("Date") +
+  ylab ("Dry Mass")
+print(Litter.Needles.facet.plot)
 
 
 ```
