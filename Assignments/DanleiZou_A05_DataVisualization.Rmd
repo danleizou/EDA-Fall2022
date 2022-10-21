@@ -113,14 +113,14 @@ see <https://r-lang.com/month-abb-in-r-with-example>
 #5
 
 #boxplot of temperature
-PeterPaul.temperature.boxplot <-
+PeterPaul.temperature.plot <-
   ggplot(PeterPaul.Lake, aes(x = factor(month, levels = c(1:12), labels = month.abb), y = temperature_C)) +
   geom_boxplot(aes(color = lakename)) +
   ggtitle("Boxplot of Temperatures in Peter and Paul Lakes") +
   xlab ("Month") +
   ylab ("Temperature in Celsius") +
   scale_x_discrete(drop = FALSE)
-print(PeterPaul.temperature.boxplot)
+print(PeterPaul.temperature.plot)
 
 #boxplot of TP
 PeterPaul.TP.plot <-
@@ -140,6 +140,9 @@ PeterPaul.TN.plot <-
   xlab ("Month") +
   ylab ("Total Nitrogen")
 print(PeterPaul.TN.plot)
+
+#creating cowplot combining the three graphs
+PeterPaul.cowplot <- plot_grid(PeterPaul.temperature.plot + theme(legend.position = "none"), PeterPaul.TN.plot + theme(legend.position = "none"), PeterPaul.TP.plot + theme(legend.position = "none"), nrow = 1, align = 'hv', rel_heights = 1, rel_widths = 1)
 
 ```
 
@@ -163,7 +166,6 @@ three facets rather than separated by color.
 Litter.Needles.plot <-
   ggplot(Litter, aes(x = collectDate, y = dryMass, color = nlcdClass)) +
   geom_point() +
-  geom_smooth (method = lm, color = "black") +
   ggtitle("Dry mass of needle litter by date") +
   xlab ("Date") +
   ylab ("Dry Mass")
@@ -175,7 +177,7 @@ print(Litter.Needles.plot)
 Litter.Needles.facet.plot <-
   ggplot(Litter, aes(x = collectDate, y = dryMass)) +
   geom_point() +
-  facet_wrap(vars(nlcdClass), nrow = 3) +
+  facet_wrap(vars(nlcdClass), nrow = 1) +
   ggtitle("Dry mass of needle litter by date [faceted]") +
   xlab ("Date") +
   ylab ("Dry Mass")
@@ -185,4 +187,4 @@ print(Litter.Needles.facet.plot)
 ```
 Question: Which of these plots (6 vs. 7) do you think is more effective, and why? 
 
-> Answer:
+> Answer: I think the plot in #6 is more effectivec because it shows the data points from all NLCD classes on one plot. Because each class has its own color, it's easier to compare the different NLCD classes against each other than it is in the faceted plot where each class has its own graph. 
