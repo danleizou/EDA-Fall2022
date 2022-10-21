@@ -98,7 +98,7 @@ PeterPaul.plot <-
   xlab("Phosphate") +
   ylab("Total Phosphorous") +
   ylim(0,75) +
-  ggtitle("Total phosphorous by phosphate for Peter Lake and Paul Lake")
+  ggtitle("Total phosphorous by phosphate for Peter and Paul Lakes")
 print(PeterPaul.plot)
 ```
 
@@ -118,7 +118,7 @@ see <https://r-lang.com/month-abb-in-r-with-example>
 PeterPaul.temperature.plot <-
   ggplot(PeterPaul.Lake, aes(x = factor(month, levels = c(1:12), labels = month.abb), y = temperature_C)) +
   geom_boxplot(aes(color = lakename)) +
-  ggtitle("Boxplot of Temperatures in Peter and Paul Lakes") +
+  ggtitle("Temperatures in Peter and Paul Lakes") +
   xlab ("Month") +
   ylab ("Temp in C") +
   scale_x_discrete(drop = FALSE)
@@ -128,7 +128,7 @@ print(PeterPaul.temperature.plot)
 PeterPaul.TP.plot <-
   ggplot(PeterPaul.Lake, aes(x = factor(month, levels = c(1:12), labels = month.abb), y = tp_ug)) +
   geom_boxplot(aes(color = lakename)) +
-  ggtitle("Boxplot of TP in Peter and Paul Lakes") +
+  ggtitle("TP in Peter and Paul Lakes") +
   xlab ("Month") +
   ylab ("TP") +
   scale_x_discrete(drop = FALSE)
@@ -138,7 +138,7 @@ print(PeterPaul.TP.plot)
 PeterPaul.TN.plot <-
   ggplot(PeterPaul.Lake, aes(x = factor(month, levels = c(1:12), labels = month.abb), y = tn_ug)) +
   geom_boxplot(aes(color = lakename)) +
-  ggtitle("Boxplot of TN in Peter and Paul Lakes") +
+  ggtitle("TN in Peter and Paul Lakes") +
   xlab ("Month") +
   ylab ("TN")
 print(PeterPaul.TN.plot)
