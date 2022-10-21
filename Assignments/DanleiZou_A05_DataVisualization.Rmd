@@ -89,13 +89,15 @@ limits using `xlim()` and/or `ylim()`).
 ```{r}
 #4
 
+#creating plot of tp_ug by po4
+
 PeterPaul.plot <-
   ggplot(PeterPaul.Lake, aes(x = tp_ug, y = po4, color = lakename)) +
   geom_point() +
   geom_smooth (method = lm, color = "black") +
   xlab("Phosphate") +
   ylab("Total Phosphorous") +
-  ylim(0,100) +
+  ylim(0,75) +
   ggtitle("Total phosphorous by phosphate for Peter Lake and Paul Lake")
 print(PeterPaul.plot)
 ```
@@ -118,7 +120,7 @@ PeterPaul.temperature.plot <-
   geom_boxplot(aes(color = lakename)) +
   ggtitle("Boxplot of Temperatures in Peter and Paul Lakes") +
   xlab ("Month") +
-  ylab ("Temperature in Celsius") +
+  ylab ("Temp in C") +
   scale_x_discrete(drop = FALSE)
 print(PeterPaul.temperature.plot)
 
@@ -128,7 +130,7 @@ PeterPaul.TP.plot <-
   geom_boxplot(aes(color = lakename)) +
   ggtitle("Boxplot of TP in Peter and Paul Lakes") +
   xlab ("Month") +
-  ylab ("Total Phosphorous") +
+  ylab ("TP") +
   scale_x_discrete(drop = FALSE)
 print(PeterPaul.TP.plot)
 
@@ -138,18 +140,18 @@ PeterPaul.TN.plot <-
   geom_boxplot(aes(color = lakename)) +
   ggtitle("Boxplot of TN in Peter and Paul Lakes") +
   xlab ("Month") +
-  ylab ("Total Nitrogen")
+  ylab ("TN")
 print(PeterPaul.TN.plot)
 
 #creating cowplot combining the three graphs
-PeterPaul.cowplot <- plot_grid(PeterPaul.temperature.plot + theme(legend.position = "none"), PeterPaul.TN.plot + theme(legend.position = "none"), PeterPaul.TP.plot + theme(legend.position = "none"), nrow = 1, align = 'hv', rel_heights = 1, rel_widths = 1)
+plot_grid(PeterPaul.temperature.plot + theme(legend.position = "none"), PeterPaul.TN.plot + theme(legend.position = "none"), PeterPaul.TP.plot + theme(legend.position = "bottom"), nrow = 3, align = 'hv', rel_heights = c(1,1,1.5), rel_widths = 1)
 
 ```
 
 Question: What do you observe about the variables of interest over seasons 
 and between lakes? 
 
-> Answer: 
+> Answer: All three variables of interest are most prevalent during summer months, with little to no appearance during the winter months. Levels for all three variables of interest are highest in July and August. Between the two lakes, Peter Lake generally has higher levels across the three variables of interest in nearly every month (with the exception of Temperature where Paul Lake shows slightly greater levels in some months).
 
 6. [Niwot Ridge] Plot a subset of the litter dataset by displaying only the 
 "Needles" functional group. Plot the dry mass of needle litter by date and 
@@ -177,7 +179,7 @@ print(Litter.Needles.plot)
 Litter.Needles.facet.plot <-
   ggplot(Litter, aes(x = collectDate, y = dryMass)) +
   geom_point() +
-  facet_wrap(vars(nlcdClass), nrow = 1) +
+  facet_wrap(vars(nlcdClass), nrow = 3) +
   ggtitle("Dry mass of needle litter by date [faceted]") +
   xlab ("Date") +
   ylab ("Dry Mass")
@@ -187,4 +189,4 @@ print(Litter.Needles.facet.plot)
 ```
 Question: Which of these plots (6 vs. 7) do you think is more effective, and why? 
 
-> Answer: I think the plot in #6 is more effectivec because it shows the data points from all NLCD classes on one plot. Because each class has its own color, it's easier to compare the different NLCD classes against each other than it is in the faceted plot where each class has its own graph. 
+> Answer: I think the plot in #6 is more effective because it shows the data points from all NLCD classes on one plot. Because each class has its own color, it's easier to compare the different NLCD classes against each other than it is in the faceted plot where each class has its own graph. 
