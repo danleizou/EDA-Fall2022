@@ -32,7 +32,7 @@ This exercise accompanies the lessons in Environmental Data Analytics on general
 
 2. Build a ggplot theme and set it as your default theme.
 
-```{r setup}
+```{r starting}
 #1
 
 #checking working directory
@@ -166,7 +166,7 @@ summary(LakeChemPhys.multiple.lm)
 
 #ANOVA model for average temp for lakes in July
 LakeChemPhys.anova.lakes <- aov(data = LakeChemPhys.processed, temperature_C ~ lakename)
-summary(LakeChemPhys.anova)
+summary(LakeChemPhys.anova.lakes)
 
 #linear model for average temp for lakes in July
 LakeChemPhys.lm.lakes <- lm(data = LakeChemPhys.processed, temperature_C ~ lakename)
