@@ -1,11 +1,13 @@
 ---
-title: "Assignment 8: Spatial Analysis in R"
+title: 'Assignment 8: Spatial Analysis in R'
 author: "Danlei Zou"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 geometry: margin=2.54cm
-editor_options: 
+editor_options:
   chunk_output_type: console
-  markdown: 
+  markdown:
     wrap: 72
 ---
 
@@ -73,7 +75,7 @@ ggplot(data=NebraskaCounties) +
 
 6. What is the EPSG code of the Counties dataset? Is this a geographic or a projected coordinate reference system? (Or, does this CRS use angular or planar coordinate units?) To what datum is this CRS associated? (Tip: look the EPSG code on <https://spatialreference.org>) 
 
-> ANSWER: The EPSG code of the Counties dataset is 4269. This is a projected coordinate reference system and is associated wiht the North America datum (US, Canada, Mexico, and Central America).
+> ANSWER: The EPSG code of the Counties dataset is 4269. This is a geographic reference system and is associated with the North America datum (US, Canada, Mexico, and Central America).
 > 
 
 
@@ -179,7 +181,10 @@ Now we can examine where the flooding appears most acute by visualizing gage hei
 
 ```{r}
 #Map the points, sized by gage height
-
+ggplot() +
+  geom_sf(data = NebraskaCounties) +
+  geom_sf(data = gage.JoinSites, aes(color = gage_ht), alpha = 0.5) +
+  scale_color_gradient(low = 'green', high = 'blue')
 
 ```
 
@@ -197,10 +202,13 @@ Up next we will do some spatial analysis with our data. To prepare for this, we 
 
 ```{r}
 #20 Transform the counties and gage location datasets to UTM Zone 14
-
+NebraskaCounties.UTM <- st_transform(NebraskaCounties, crs = 32614)
+gage.JoinSites.UTM <- st_transform(gage.JoinSites, crs = 32614)
 
 #21 Plot the data
-
+ggplot() +
+  geom_sf(data = NebraskaCounties.UTM, fill = 'green', alpha = 0.1) +
+  geom_sf(data = gage.JoinSites.UTM, color = 'blue')
 
 ```
 
@@ -219,12 +227,18 @@ Now let's zoom into a particular county and examine the gages located there.
 ```{r}
 #22 Select the county
 
+#filtering for Lancaster County 
+LancasterCounty.NB <- NebraskaCounties %>%
+  filter(NAME == "Lancaster")
 
 #23 Select gages within the selected county
-
+Lancaster.intersect <- gage.JoinSites[LancasterCounty.NB,]
 
 #24 Plot
-
+ggplot() +
+  geom_sf(data = NebraskaCounties.UTM, fill = 'green', alpha = 0.1) +
+  geom_sf(data = Lancaster.intersect, color = 'blue', alpha = 0.5) +
+  geom_sf(data = LancasterCounty.NB, fill = 'orange', alpha = 0.2)
 
 
 ```
