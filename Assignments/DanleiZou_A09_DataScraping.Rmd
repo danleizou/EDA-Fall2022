@@ -1,6 +1,6 @@
 ---
 title: "Assignment 09: Data Scraping"
-author: "Danlei Zou"
+author: "Danlei"
 output: pdf_document
 geometry: margin=2.54cm
 editor_options: 
