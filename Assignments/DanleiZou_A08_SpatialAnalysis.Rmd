@@ -4,6 +4,8 @@ author: "Danlei Zou"
 output:
   html_document:
     df_print: paged
+    toc: true
+    toc_depth: 2
 geometry: margin=2.54cm
 editor_options:
   chunk_output_type: console
